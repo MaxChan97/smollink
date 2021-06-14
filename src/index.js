@@ -7,7 +7,8 @@ import reportWebVitals from './reportWebVitals';
 // imports for routing
 import { BrowserRouter } from 'react-router-dom';
 
-// imports for
+// imports for toast alerts
+import { ToastContainer } from 'react-toastify';
 
 ReactDOM.render(
   <React.StrictMode>
