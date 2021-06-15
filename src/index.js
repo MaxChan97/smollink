@@ -10,6 +10,9 @@ import { BrowserRouter } from 'react-router-dom';
 // imports for toast alerts
 import { ToastContainer } from 'react-toastify';
 
+// imports for Chakra UI
+import { ChakraProvider } from '@chakra-ui/react';
+
 ReactDOM.render(
   <React.StrictMode>
     <ToastContainer
@@ -24,7 +27,9 @@ ReactDOM.render(
       pauseOnHover
     />
     <BrowserRouter>
-      <App />
+      <ChakraProvider>
+        <App />
+      </ChakraProvider>
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
