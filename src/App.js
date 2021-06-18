@@ -6,9 +6,9 @@ import ShortenURL from './pages/ShortenURL';
 
 function App() {
   return (
-    <div className="App">
+    <div className='App'>
       <Switch>
-        <Route exact path="/" component={ShortenURL} />
+        <Route exact path='/' component={ShortenURL} />
       </Switch>
     </div>
   );

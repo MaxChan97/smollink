@@ -1,15 +1,98 @@
 import React, { useState } from 'react';
-// imports for firebase
-//import { db } from '../../firebase';
-// imports for generating random string
-//import cryptoRandomString from 'crypto-random-string';
 // imports for charkra ui components
-import { Text, Input, InputGroup, InputLeftAddon } from '@chakra-ui/react';
+import {
+  Text,
+  Input,
+  InputGroup,
+  InputLeftAddon,
+  Button,
+} from '@chakra-ui/react';
 // imports for local assets
 import TypingIcon from '../../assets/icons/TypingIcon.svg';
+// imports for validating URL
+import validator from 'validator';
+// imports for alert messages
+import { toast } from 'react-toastify';
+// imports for generating random string
+import cryptoRandomString from 'crypto-random-string';
+// imports for firebase
+import { db } from '../../firebase';
 
 export default function ShortenURL() {
-  const [originalURL, setOriginalURL] = useState('');
+  const [inputURL, setInputURL] = useState('');
+  const [customSmollinkAlias, setCustomSmollinkAlias] = useState('');
+
+  function processURL(inputURL) {
+    let processedURL;
+    if (inputURL.slice(0, 12) === 'https://www.') {
+      // this format 'https://www.google.com'
+      // no need do anything
+      processedURL = inputURL;
+    } else if (inputURL.slice(0, 8) === 'https://') {
+      // this format 'https://google.com'
+      const rawURL = inputURL.slice(8);
+      processedURL = 'https://www.' + rawURL;
+    } else if (inputURL.slice(0, 4) === 'www.') {
+      // this format 'www.google.com'
+      const rawURL = inputURL.slice(4);
+      processedURL = 'https://www.' + rawURL;
+    } else {
+      // this format 'google.com'
+      processedURL = 'https://www.' + inputURL;
+    }
+    return processedURL;
+  }
+
+  async function isCustomSmollinkAliasTaken() {
+    const firebaseDoc = await db
+      .collection('smollinks')
+      .doc(customSmollinkAlias)
+      .get();
+    return firebaseDoc.exists;
+  }
+
+  function isCustomSmollinkAliasValid() {
+    // always returns false
+    return validator.isURL('https://www.google.com/' + customSmollinkAlias);
+  }
+
+  async function onCreateSmollink() {
+    // check the format of the originalURL input i.e. is it 'https://www.google.com' or 'https://google.com' or 'www.google.com' or 'google.com' and process accordingly
+    let processedURL = processURL(inputURL);
+    // check if URL to be shortened is legit
+    const isURLValid = validator.isURL(processedURL);
+    if (isURLValid) {
+      // check if users custom smollink alias is usable
+      if (customSmollinkAlias !== '' && (await isCustomSmollinkAliasTaken())) {
+        toast.error('Custom link inputted is already taken!');
+      } else if (customSmollinkAlias !== '' && !isCustomSmollinkAliasValid()) {
+        toast.error('Custom link inputted is not a valid URL!');
+      } else {
+        let smollinkAlias;
+        if (customSmollinkAlias !== '') {
+          // use custom smollink alias
+          smollinkAlias = customSmollinkAlias;
+        } else {
+          // generate random string as smollink alias
+          smollinkAlias = cryptoRandomString({ length: 10, type: 'url-safe' });
+        }
+        // persist and send success msg
+        db.collection('smollinks')
+          .doc(smollinkAlias)
+          .set({
+            originalURL: processedURL,
+          })
+          .then(() => {
+            toast.success('smollink successfully created!');
+          })
+          .catch((error) => {
+            console.error('Error writing document: ', error);
+          });
+      }
+    } else {
+      toast.error('The inputted URL is invalid!');
+    }
+  }
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -21,7 +104,7 @@ export default function ShortenURL() {
           width: '60%',
         }}
       >
-        <Text color="gray.500" fontSize="4xl">
+        <Text color='gray.500' fontSize='4xl'>
           Welcome to smollink!
         </Text>
         <div
@@ -30,27 +113,62 @@ export default function ShortenURL() {
             width: '100%',
             textAlign: 'start',
             alignItems: 'center',
+            paddingTop: '18px',
           }}
         >
           <img
             src={TypingIcon}
-            alt=""
+            alt=''
             style={{ height: '38px', marginRight: '8px' }}
           />
-          <Text color="black.500" fontSize="lg">
+          <Text color='black.500' fontSize='lg'>
             Enter a long URL to make a smollink
           </Text>
         </div>
         <InputGroup>
-          <InputLeftAddon children="https://" />
+          <InputLeftAddon children='https://www.' />
           <Input
-            value={originalURL}
+            value={inputURL}
             onChange={(e) => {
-              setOriginalURL(e.target.value);
+              setInputURL(e.target.value);
             }}
-            placeholder="Enter url here"
+            placeholder='Enter url here'
           />
         </InputGroup>
+        <div
+          style={{
+            display: 'flex',
+            width: '100%',
+            textAlign: 'start',
+            alignItems: 'center',
+            paddingTop: '18px',
+          }}
+        >
+          <img
+            src={TypingIcon}
+            alt=''
+            style={{ height: '38px', marginRight: '8px' }}
+          />
+          <Text color='black.500' fontSize='lg'>
+            Customise your link
+          </Text>
+        </div>
+        <InputGroup>
+          <InputLeftAddon children={window.location.href} />
+          <Input
+            value={customSmollinkAlias}
+            onChange={(e) => {
+              setCustomSmollinkAlias(e.target.value);
+            }}
+            width='50%'
+            placeholder='Leave this empty if you do not mind a random link'
+          />
+        </InputGroup>
+        <div style={{ paddingTop: '30px' }}>
+          <Button colorScheme='teal' variant='solid' onClick={onCreateSmollink}>
+            Create smollink!
+          </Button>
+        </div>
       </div>
     </div>
   );
