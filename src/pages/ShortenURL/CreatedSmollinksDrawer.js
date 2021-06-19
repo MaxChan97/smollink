@@ -30,6 +30,7 @@ export default function CreatedSmollinksDrawer({
     db.collection('users')
       .doc(smollinkCurrentUser)
       .collection('createdSmollinks')
+      .orderBy('createdAt')
       .get()
       .then((querySnapshot) => {
         let createdSmollinksTemp = [];

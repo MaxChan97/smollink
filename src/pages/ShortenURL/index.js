@@ -18,6 +18,7 @@ import { toast } from 'react-toastify';
 import cryptoRandomString from 'crypto-random-string';
 // imports for firebase
 import { db } from '../../firebase';
+import firebase from 'firebase/app';
 // imports for redux
 import { useSelector, useDispatch } from 'react-redux';
 import { addNewUser } from '../../redux/actions';
@@ -102,11 +103,13 @@ export default function ShortenURL() {
           smollinkAlias = cryptoRandomString({ length: 10, type: 'url-safe' });
         }
         // persist and send success msg
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp;
         db.collection('smollinks')
           .doc(smollinkAlias)
           .set({
             originalURL: processedURL,
             creator: smollinkCurrentUser,
+            createdAt: timestamp(),
           })
           .then(() => {
             db.collection('users')
@@ -115,6 +118,7 @@ export default function ShortenURL() {
               .doc(smollinkAlias)
               .set({
                 originalURL: processedURL,
+                createdAt: timestamp(),
               })
               .then(() => {
                 toast.success('smollink successfully created!');
