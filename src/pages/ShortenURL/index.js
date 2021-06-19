@@ -6,6 +6,7 @@ import {
   InputGroup,
   InputLeftAddon,
   Button,
+  useDisclosure,
 } from '@chakra-ui/react';
 // imports for local assets
 import TypingIcon from '../../assets/icons/TypingIcon.svg';
@@ -20,6 +21,8 @@ import { db } from '../../firebase';
 // imports for redux
 import { useSelector, useDispatch } from 'react-redux';
 import { addNewUser } from '../../redux/actions';
+// imports for drawer displaying created smollinks
+import CreatedSmollinkDrawer from './CreatedSmollinksDrawer';
 
 export default function ShortenURL() {
   const dispatch = useDispatch();
@@ -28,6 +31,8 @@ export default function ShortenURL() {
   const [inputURL, setInputURL] = useState('');
   const [customSmollinkAlias, setCustomSmollinkAlias] = useState('');
   const [isCreatingSmollink, setIsCreatingSmollink] = useState(false);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     console.log(smollinkCurrentUser);
@@ -113,6 +118,9 @@ export default function ShortenURL() {
               })
               .then(() => {
                 toast.success('smollink successfully created!');
+                setInputURL('');
+                setCustomSmollinkAlias('');
+                onOpen();
               })
               .catch((error) => {
                 toast.error('Something went wrong please try again');
@@ -140,9 +148,26 @@ export default function ShortenURL() {
           width: '60%',
         }}
       >
-        <Text color='gray.500' fontSize='4xl'>
-          Welcome to smollink!
-        </Text>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            width: '100%',
+          }}
+        >
+          <Text color='gray.500' fontSize='4xl'>
+            Welcome to smollink!
+          </Text>
+          <Button
+            colorScheme='teal'
+            variant='outline'
+            style={{ marginTop: '11px' }}
+            onClick={onOpen}
+          >
+            My smollinks
+          </Button>
+        </div>
         <div
           style={{
             display: 'flex',
@@ -212,6 +237,11 @@ export default function ShortenURL() {
           </Button>
         </div>
       </div>
+      <CreatedSmollinkDrawer
+        isOpen={isOpen}
+        onClose={onClose}
+        smollinkCurrentUser={smollinkCurrentUser}
+      />
     </div>
   );
 }

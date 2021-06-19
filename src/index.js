@@ -35,7 +35,7 @@ const persistor = persistStore(store);
 ReactDOM.render(
   <React.StrictMode>
     <ToastContainer
-      position='top-right'
+      position='top-left'
       autoClose={5000}
       hideProgressBar={false}
       newestOnTop={false}
