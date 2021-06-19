@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // imports for charkra ui components
 import {
   Text,
@@ -17,10 +17,29 @@ import { toast } from 'react-toastify';
 import cryptoRandomString from 'crypto-random-string';
 // imports for firebase
 import { db } from '../../firebase';
+// imports for redux
+import { useSelector, useDispatch } from 'react-redux';
+import { addNewUser } from '../../redux/actions';
 
 export default function ShortenURL() {
+  const dispatch = useDispatch();
+  let smollinkCurrentUser = useSelector((state) => state.smollinkCurrentUser);
+
   const [inputURL, setInputURL] = useState('');
   const [customSmollinkAlias, setCustomSmollinkAlias] = useState('');
+  const [isCreatingSmollink, setIsCreatingSmollink] = useState(false);
+
+  useEffect(() => {
+    console.log(smollinkCurrentUser);
+    if (!smollinkCurrentUser) {
+      console.log('new user created');
+      const newUserId = cryptoRandomString({ length: 20, type: 'url-safe' });
+      db.collection('users').doc(newUserId).set({});
+      dispatch(addNewUser(newUserId));
+      smollinkCurrentUser = newUserId;
+    }
+    console.log(smollinkCurrentUser);
+  }, [smollinkCurrentUser]);
 
   function processURL(inputURL) {
     let processedURL;
@@ -58,6 +77,7 @@ export default function ShortenURL() {
 
   async function onCreateSmollink() {
     // check the format of the originalURL input i.e. is it 'https://www.google.com' or 'https://google.com' or 'www.google.com' or 'google.com' and process accordingly
+    setIsCreatingSmollink(true);
     let processedURL = processURL(inputURL);
     // check if URL to be shortened is legit
     const isURLValid = validator.isURL(processedURL);
@@ -81,17 +101,33 @@ export default function ShortenURL() {
           .doc(smollinkAlias)
           .set({
             originalURL: processedURL,
+            creator: smollinkCurrentUser,
           })
           .then(() => {
-            toast.success('smollink successfully created!');
+            db.collection('users')
+              .doc(smollinkCurrentUser)
+              .collection('createdSmollinks')
+              .doc(smollinkAlias)
+              .set({
+                originalURL: processedURL,
+              })
+              .then(() => {
+                toast.success('smollink successfully created!');
+              })
+              .catch((error) => {
+                toast.error('Something went wrong please try again');
+                console.error('Error writing document: ', error);
+              });
           })
           .catch((error) => {
+            toast.error('Something went wrong please try again');
             console.error('Error writing document: ', error);
           });
       }
     } else {
       toast.error('The inputted URL is invalid!');
     }
+    setIsCreatingSmollink(false);
   }
 
   return (
@@ -165,7 +201,13 @@ export default function ShortenURL() {
           />
         </InputGroup>
         <div style={{ paddingTop: '30px' }}>
-          <Button colorScheme='teal' variant='solid' onClick={onCreateSmollink}>
+          <Button
+            isLoading={isCreatingSmollink}
+            loadingText='Creating'
+            colorScheme='teal'
+            variant='solid'
+            onClick={onCreateSmollink}
+          >
             Create smollink!
           </Button>
         </div>
