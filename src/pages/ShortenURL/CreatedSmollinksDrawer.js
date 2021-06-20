@@ -52,16 +52,20 @@ export default function CreatedSmollinksDrawer({
   }
 
   function displayCreatedSmollinkItems() {
-    return createdSmollinks.map((createdSmollink, idx) => {
-      const smollink = window.location.href + createdSmollink.smollinkAlias;
-      return (
-        <CreatedSmollinkItem
-          key={idx}
-          originalURL={createdSmollink.originalURL}
-          smollink={smollink}
-        />
-      );
-    });
+    if (createdSmollinks.length === 0) {
+      return <h1 style={{ textAlign: 'center' }}>No smollinks!</h1>;
+    } else {
+      return createdSmollinks.map((createdSmollink, idx) => {
+        const smollink = window.location.href + createdSmollink.smollinkAlias;
+        return (
+          <CreatedSmollinkItem
+            key={idx}
+            originalURL={createdSmollink.originalURL}
+            smollink={smollink}
+          />
+        );
+      });
+    }
   }
 
   return (
@@ -69,7 +73,7 @@ export default function CreatedSmollinksDrawer({
       <Drawer placement='right' onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerHeader borderBottomWidth='1px'>Created smollinks</DrawerHeader>
+          <DrawerHeader borderBottomWidth='1px'>My smollinks</DrawerHeader>
           {isLoading ? (
             <DrawerBody>
               <Spinner />
