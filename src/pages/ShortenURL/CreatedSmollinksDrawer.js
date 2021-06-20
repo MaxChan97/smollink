@@ -10,6 +10,8 @@ import {
 } from '@chakra-ui/react';
 // imports for firebase
 import { db } from '../../firebase';
+// import created smollink item component
+import CreatedSmollinkItem from './CreatedSmollinkItem';
 
 export default function CreatedSmollinksDrawer({
   isOpen,
@@ -53,13 +55,11 @@ export default function CreatedSmollinksDrawer({
     return createdSmollinks.map((createdSmollink, idx) => {
       const smollink = window.location.href + createdSmollink.smollinkAlias;
       return (
-        <div key={idx} style={{ display: 'flex', flexDirection: 'column' }}>
-          <h4>Original URL:</h4>
-          <h5>{createdSmollink.originalURL}</h5>
-          <h4>smollink:</h4>
-          <h5>{smollink}</h5>
-          <hr />
-        </div>
+        <CreatedSmollinkItem
+          key={idx}
+          originalURL={createdSmollink.originalURL}
+          smollink={smollink}
+        />
       );
     });
   }
@@ -71,7 +71,9 @@ export default function CreatedSmollinksDrawer({
         <DrawerContent>
           <DrawerHeader borderBottomWidth='1px'>Created smollinks</DrawerHeader>
           {isLoading ? (
-            <Spinner />
+            <DrawerBody>
+              <Spinner />
+            </DrawerBody>
           ) : (
             <DrawerBody>{displayCreatedSmollinkItems()}</DrawerBody>
           )}
