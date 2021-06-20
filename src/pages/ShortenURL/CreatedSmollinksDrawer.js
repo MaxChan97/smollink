@@ -75,7 +75,9 @@ export default function CreatedSmollinksDrawer({
               <Spinner />
             </DrawerBody>
           ) : (
-            <DrawerBody>{displayCreatedSmollinkItems()}</DrawerBody>
+            <DrawerBody style={{ paddingTop: '0' }}>
+              {displayCreatedSmollinkItems()}
+            </DrawerBody>
           )}
         </DrawerContent>
       </Drawer>

@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 // imports for local assets
 import TypingIcon from '../../assets/icons/TypingIcon.svg';
+import CustomizeIcon from '../../assets/icons/CustomizeIcon.svg';
 // imports for validating URL
 import validator from 'validator';
 // imports for alert messages
@@ -143,7 +144,13 @@ export default function ShortenURL() {
   }
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        paddingTop: '18px',
+      }}
+    >
       <div
         style={{
           display: 'flex',
@@ -166,7 +173,7 @@ export default function ShortenURL() {
           <Button
             colorScheme='teal'
             variant='outline'
-            style={{ marginTop: '11px' }}
+            style={{ marginTop: '8px' }}
             onClick={onOpen}
           >
             My smollinks
@@ -179,6 +186,7 @@ export default function ShortenURL() {
             textAlign: 'start',
             alignItems: 'center',
             paddingTop: '18px',
+            paddingBottom: '10px',
           }}
         >
           <img
@@ -207,10 +215,11 @@ export default function ShortenURL() {
             textAlign: 'start',
             alignItems: 'center',
             paddingTop: '18px',
+            paddingBottom: '10px',
           }}
         >
           <img
-            src={TypingIcon}
+            src={CustomizeIcon}
             alt=''
             style={{ height: '38px', marginRight: '8px' }}
           />

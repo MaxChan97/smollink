@@ -12,7 +12,13 @@ export default function NotFound() {
   }
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        paddingTop: '18px',
+      }}
+    >
       <div
         style={{
           display: 'flex',
