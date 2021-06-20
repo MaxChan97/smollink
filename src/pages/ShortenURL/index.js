@@ -26,6 +26,27 @@ import { addNewUser } from '../../redux/actions';
 // imports for drawer displaying created smollinks
 import CreatedSmollinkDrawer from './CreatedSmollinksDrawer';
 
+export function processURL(inputURL) {
+  let processedURL;
+  if (inputURL.slice(0, 12) === 'https://www.') {
+    // this format 'https://www.google.com'
+    // no need do anything
+    processedURL = inputURL;
+  } else if (inputURL.slice(0, 8) === 'https://') {
+    // this format 'https://google.com'
+    const rawURL = inputURL.slice(8);
+    processedURL = 'https://www.' + rawURL;
+  } else if (inputURL.slice(0, 4) === 'www.') {
+    // this format 'www.google.com'
+    const rawURL = inputURL.slice(4);
+    processedURL = 'https://www.' + rawURL;
+  } else {
+    // this format 'google.com'
+    processedURL = 'https://www.' + inputURL;
+  }
+  return processedURL;
+}
+
 export default function ShortenURL() {
   const dispatch = useDispatch();
   let smollinkCurrentUser = useSelector((state) => state.smollinkCurrentUser);
@@ -47,27 +68,6 @@ export default function ShortenURL() {
     }
     console.log(smollinkCurrentUser);
   }, [smollinkCurrentUser]);
-
-  function processURL(inputURL) {
-    let processedURL;
-    if (inputURL.slice(0, 12) === 'https://www.') {
-      // this format 'https://www.google.com'
-      // no need do anything
-      processedURL = inputURL;
-    } else if (inputURL.slice(0, 8) === 'https://') {
-      // this format 'https://google.com'
-      const rawURL = inputURL.slice(8);
-      processedURL = 'https://www.' + rawURL;
-    } else if (inputURL.slice(0, 4) === 'www.') {
-      // this format 'www.google.com'
-      const rawURL = inputURL.slice(4);
-      processedURL = 'https://www.' + rawURL;
-    } else {
-      // this format 'google.com'
-      processedURL = 'https://www.' + inputURL;
-    }
-    return processedURL;
-  }
 
   async function isCustomSmollinkAliasTaken() {
     const firebaseDoc = await db
