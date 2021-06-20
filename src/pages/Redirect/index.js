@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 // imports for routing
-import { useParams } from 'react-router';
+import { useParams, useHistory } from 'react-router-dom';
 // imports for firebase
 import { db } from '../../firebase';
 
 export default function Redirect() {
   const { alias } = useParams();
+  const history = useHistory();
 
   useEffect(() => {
     (async () => {
@@ -13,7 +14,8 @@ export default function Redirect() {
       if (firebaseDoc.exists) {
         window.location.href = firebaseDoc.data().originalURL;
       } else {
-        console.log('this alias does not exist');
+        // send to not found page
+        history.push('/NotFound/NotFound');
       }
     })();
   }, [alias]);
