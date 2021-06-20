@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "/smollink/static/css/main.1ea1a02a.chunk.css",
+    "main.js": "/smollink/static/js/main.142b1112.chunk.js",
+    "main.js.map": "/smollink/static/js/main.142b1112.chunk.js.map",
+    "runtime-main.js": "/smollink/static/js/runtime-main.aedd09f3.js",
+    "runtime-main.js.map": "/smollink/static/js/runtime-main.aedd09f3.js.map",
+    "static/css/2.97503911.chunk.css": "/smollink/static/css/2.97503911.chunk.css",
+    "static/js/2.d6571b4a.chunk.js": "/smollink/static/js/2.d6571b4a.chunk.js",
+    "static/js/2.d6571b4a.chunk.js.map": "/smollink/static/js/2.d6571b4a.chunk.js.map",
+    "static/js/3.9406f5ab.chunk.js": "/smollink/static/js/3.9406f5ab.chunk.js",
+    "static/js/3.9406f5ab.chunk.js.map": "/smollink/static/js/3.9406f5ab.chunk.js.map",
+    "index.html": "/smollink/index.html",
+    "static/css/2.97503911.chunk.css.map": "/smollink/static/css/2.97503911.chunk.css.map",
+    "static/css/main.1ea1a02a.chunk.css.map": "/smollink/static/css/main.1ea1a02a.chunk.css.map",
+    "static/js/2.d6571b4a.chunk.js.LICENSE.txt": "/smollink/static/js/2.d6571b4a.chunk.js.LICENSE.txt",
+    "static/media/CustomizeIcon.b945da33.svg": "/smollink/static/media/CustomizeIcon.b945da33.svg",
+    "static/media/TypingIcon.86aae574.svg": "/smollink/static/media/TypingIcon.86aae574.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.aedd09f3.js",
+    "static/css/2.97503911.chunk.css",
+    "static/js/2.d6571b4a.chunk.js",
+    "static/css/main.1ea1a02a.chunk.css",
+    "static/js/main.142b1112.chunk.js"
+  ]
+}
