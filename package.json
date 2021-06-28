@@ -1,6 +1,6 @@
 {
   "name": "url-shortener",
-  "homepage": "https://MaxChan97.github.io/smollink",
+  "homepage": "/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
